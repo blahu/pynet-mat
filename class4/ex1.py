@@ -9,13 +9,8 @@ code from class3, exercise4--determine if the IP address is valid.
 Continue prompting the user to re-input an IP address until a valid IP
 address is input. """
 
-import sys
-
-print sys.argv[0]
-print "...begin...\n"
-
+# initialize ip_addr
 ip_addr = ''
-
 
 while True:
     # initialize the valid flag
@@ -34,10 +29,10 @@ while True:
         if int(a) < 1 or int(a) > 223 or int(a) == 127:
             valid = False
 
-        elif int(b) not in range (0, 256) or \
-            int(c) not in range (0, 256) or \
-            int(d) not in range (0, 256) :
-                valid = False
+        elif (  (int(b) not in range (0, 256)) or
+                (int(c) not in range (0, 256)) or
+                (int(d) not in range (0, 256))) :
+            valid = False
 
         elif int(a) == 169 and int(b) == 254:
             valid = False
@@ -48,7 +43,3 @@ while True:
         break
     else:
         print "[%s] is not valid!" % ip_addr
-
-
-
-print "...end...\n"
