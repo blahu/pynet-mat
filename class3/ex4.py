@@ -36,7 +36,7 @@ else:
 		if int(a) < 1 or int(a) > 223 or int(a) == 127:
 			valid = False
 
-		elif int(b) not in range (0, 255) or int(c) not in range (0, 255) or int(d) not in range (0, 255) :
+		elif int(b) not in range (0, 256) or int(c) not in range (0, 256) or int(d) not in range (0, 256) :
 			valid = False
 
 		elif int(a) == 169 and int(b) == 254:
