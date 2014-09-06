@@ -29,7 +29,6 @@ while not valid:
 
     if validate_ip_address(ip_addr):
         valid = True
-        print "%s is valid:" % ip_addr
-        print "%s" % dotted_dec_to_bin(ip_addr)
+        print "%s in binary is %s" % (ip_addr, dotted_dec_to_bin(ip_addr))
     else:
-        print "[%s] is not valid!" % ip_addr
+        print "%s is not valid!" % ip_addr

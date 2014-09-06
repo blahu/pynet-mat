@@ -22,6 +22,9 @@ def validate_ip_address (ip_address) :
     else:
         a,b,c,d = octets
 
+    if a is '' or b is '' or c is '' or d is '':
+        return False
+
     if int(a) < 1 or int(a) > 223 or int(a) == 127:
         return False
 
