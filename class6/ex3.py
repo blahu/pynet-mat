@@ -22,20 +22,31 @@ def validate_ip_address (ip_address) :
     else:
         a,b,c,d = octets
 
-    if a is '' or b is '' or c is '' or d is '':
+    try:
+        int_a = int(a)
+        int_b = int(b)
+        int_c = int(c)
+        int_d = int(d)
+
+    except ValueError as e:
+        # int() conversion failed:
         return False
 
-    if int(a) < 1 or int(a) > 223 or int(a) == 127:
+    # check 1st octet
+    if int_a < 1 or int_a > 223 or int_a == 127:
         return False
 
-    elif (  (int(b) not in range (0, 256)) or
-            (int(c) not in range (0, 256)) or
-            (int(d) not in range (0, 256))) :
+    # check 2nd 3rd and 4th octet
+    elif (  (int_b not in range (0, 256)) or
+            (int_c not in range (0, 256)) or
+            (int_d not in range (0, 256))) :
         return False
 
-    elif int(a) == 169 and int(b) == 254:
+    # check 169.254.x.x 
+    elif int_a == 169 and int_b == 254:
         return False
 
+    # validated as an IP address!
     return True
 
 
