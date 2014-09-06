@@ -35,12 +35,4 @@ def validate_ip_address (ip_address) :
 
     return True
 
-from pprint import pprint
 
-ip = '172.17.22.11'
-pprint ( ip )
-pprint ( validate_ip_address(ip) )
-
-ip = '372.17.22.11'
-pprint ( ip )
-pprint ( validate_ip_address(ip) )
