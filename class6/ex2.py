@@ -12,8 +12,8 @@ Author Mat
 
 def list_to_dict (a_list):
     a_dict = {}
-    for e in enumerate (a_list, 1):
-        a_dict[ e[0] ] = e[1]
+    for i,e in enumerate (a_list, 1):
+        a_dict[ i ] = e
     return a_dict
 
 
