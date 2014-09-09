@@ -35,7 +35,11 @@ for router, router_data in ROUTERS.items():
     print "%10s startup last_changed " % (startup_last_changed_ticks)
 
 
-    if startup_last_changed_ticks == running_last_saved_ticks and running_last_saved_ticks > running_last_changed_ticks:
-        print "Startup Config has been saved since last Running Config change"
+    if running_last_changed_ticks > running_last_saved_ticks:
+        print "Running Config has been changed"
     else:
-        print "Running Config has been changed and not saved"
+        print "Running Config has not been changed"
+        if startup_last_changed_ticks > running_last_changed_ticks:
+            print "Startup Config has been saved since last Running Config change"
+
+
