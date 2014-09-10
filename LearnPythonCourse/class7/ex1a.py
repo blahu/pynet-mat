@@ -10,6 +10,7 @@
 
 a_file = open("CDP_DATA/r1_cdp.txt")
 cdp_data = a_file.read()
+a_file.close()
 
 import re
 m = re.search(r"Device ID: (.*)", cdp_data)
