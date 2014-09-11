@@ -25,25 +25,65 @@
 """
 import re
 
-a_file = open("OSPF_DATA/ospf_single_interface.txt")
-cdp_data = a_file.read()
-a_file.close()
 
-m = re.search(r"^([^ ]+?) is ", cdp_data)
-if m:
-    print m.group(1)
+def re_search( regexp, string):
+    """ 
+    Searches string for regexp
+    Returns tuple or False
+    """
+    try:
+        m = re.search(regexp, string)
+    except TypeError as e:
+        return False
+    if m:
+        return m.groups()
+    return False
 
-m = re.search(r"Internet Address ([0-9\.\/]+), Area ([0-9]+),", cdp_data)
-if m:
-    print m.group(1)
-    print m.group(2)
+OSPF_REGEXP = {
+        'Int'  : r"^([^ ]+?) is ",
+        'IP'   : r"Internet Address ([0-9\.\/]+), ",
+        'Area' : r", Area ([0-9]+),",
+        'Type' : r"Network Type (.+?),",
+        'Cost' : r", Cost: ([0-9]+)",
+        'Hello': r"Hello ([0-9]+),",
+        'Dead' : r"Dead ([0-9]+), Wait",
+}
 
-m = re.search(r"Network Type (.+?), Cost: ([0-9]+)" , cdp_data)
-if m:
-    print m.group(1)
-    print m.group(2)
 
-m = re.search(r"Hello ([0-9]+), Dead ([0-9]+), Wait" , cdp_data)
-if m:
-    print m.group(1)
-    print m.group(2)
+def print_ospf_interface (ospf_interface):
+    """
+    Expects string matching something like this:
+
+    GigabitEthernet0/0.2561 is up, line protocol is up
+    Internet Address 10.22.0.117/30, Area 303953, Attached via Network Statement
+    [...]
+    Process ID 1, Router ID 10.90.3.38, Network Type POINT_TO_POINT, Cost: 1
+    Youngest key id is 1
+
+    prints 
+    
+    Int:       GigabitEthernet0/1
+    IP:        172.16.13.150/29
+    Area:    30395
+    Type:    BROADCAST
+    Cost:    1
+    Hello:   10
+    Dead:   40
+    """
+
+
+    OSPF_HEADERS = ['Int', 'IP', 'Area', 'Type', 'Cost', 'Hello', 'Dead' ]
+    
+    for key in OSPF_HEADERS:
+        m = re_search(OSPF_REGEXP[ key ] , ospf_interface)
+        if m:
+            print "%-5s: %s" % ( key,  m[0]) 
+    print
+
+
+if __name__ == "__main__":
+    f = open("OSPF_DATA/ospf_single_interface.txt") 
+    ospf_interface = f.read()
+    f.close()
+
+    print_ospf_interface (ospf_interface)
