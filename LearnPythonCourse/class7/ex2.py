@@ -39,15 +39,6 @@ def re_search( regexp, string):
         return m.groups()
     return False
 
-OSPF_REGEXP = {
-        'Int'  : r"^([^ ]+?) is ",
-        'IP'   : r"Internet Address ([0-9\.\/]+), ",
-        'Area' : r", Area ([0-9]+),",
-        'Type' : r"Network Type (.+?),",
-        'Cost' : r", Cost: ([0-9]+)",
-        'Hello': r"Hello ([0-9]+),",
-        'Dead' : r"Dead ([0-9]+), Wait",
-}
 
 
 def print_ospf_interface (ospf_interface):
@@ -71,6 +62,15 @@ def print_ospf_interface (ospf_interface):
     Dead:   40
     """
 
+    OSPF_REGEXP = {
+            'Int'  : r"^([^ ]+?) is ",
+            'IP'   : r"Internet Address ([0-9\.\/]+), ",
+            'Area' : r", Area ([0-9]+),",
+            'Type' : r"Network Type (.+?),",
+            'Cost' : r", Cost: ([0-9]+)",
+            'Hello': r"Hello ([0-9]+),",
+            'Dead' : r"Dead ([0-9]+), Wait",
+    }
 
     OSPF_HEADERS = ['Int', 'IP', 'Area', 'Type', 'Cost', 'Hello', 'Dead' ]
     
