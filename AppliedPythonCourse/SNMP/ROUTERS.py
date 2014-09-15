@@ -10,5 +10,10 @@ ROUTERS = {
         'SNMP Port' : 8061,
         'SNMP Community' : 'galileo',
     },
+    'py_router' : {
+        'IP' : '10.1.1.1',
+        'SNMP Port' : 161,
+        'SNMP Community' : 'galileo',
+    },
 }
 
