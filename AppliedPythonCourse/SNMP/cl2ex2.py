@@ -20,6 +20,8 @@ The relevant OIDs are as follows:
 '''
 
 import sys
+import pygal
+from time import sleep
 from snmp_helper import snmp_get_oid,snmp_get_oid_v3,snmp_extract
 
 from ROUTERS import ROUTERS
@@ -55,7 +57,54 @@ def get_snmp_data (router_data, oid):
             
     return None
 
-iface_stats = {}
+
+def rrd_add ( a_list, new, max_size=60):
+    '''
+    This function adds new to a_list.
+    If list is longer than max_size,
+    we pop old value and push a new one.
+    '''
+    
+    # some senity checking
+    if type(a_list) is not list:
+        return None
+    #ENDOF if type(...
+
+    if len(a_list) >= max_size:
+        a_list = a_list [1:]
+
+    a_list.append(new)
+
+    return (a_list)
+#ENDOF def rrd_add
+
+
+def get_iface_graph ( fn, title, in_list, in_title, out_list, out_title, times):
+    '''
+    Creates a graph using pygal in svg format
+    Input/Output line graph in time.
+    '''
+
+
+    # Create a Chart of type Line
+    line_chart = pygal.Line()
+
+    # Title
+    line_chart.title = title
+
+    # X-axis labels (samples were every five minutes)
+    line_chart.x_labels = times
+
+    # Add each one of the above lists into the graph as a line with corresponding title
+    line_chart.add(in_title,  in_list)
+    line_chart.add(out_title, out_list)
+
+    # Create an output image file from this
+    line_chart.render_to_file(fn)
+    return True
+
+#ENDOF: def get_iface_graph ( fn, title, in_list, in_title, out_list, out_title, times)
+
 
 def main():
 
@@ -64,7 +113,7 @@ def main():
 
             print
             print router
-            i = '.1'
+            idx = '.{}'.format(router_data['ifIndex'])
 
             # get current time
             from time import strftime
@@ -72,19 +121,47 @@ def main():
             print 'Current Time={}'.format(curr_time)
 
             # get snmp ifDescr.IfIndex==1
-            if_descr = get_snmp_data ( router_data, OIDS['ifDescr'] + i)
+            if_descr = get_snmp_data ( router_data, OIDS['ifDescr'] + idx)
             if if_descr:
                 print 'ifDescr={}'.format(if_descr)
 
-            # get snmp ifInOctets.IfIndex==1
-            if_oct_in = get_snmp_data ( router_data, OIDS['ifInOctets'] + i)
-            if if_oct_in:
-                print 'ifInOctets={}'.format(if_oct_in)
+            # Loop for 60 minutes
+            in_list = []
+            out_list = []
+            times = []
 
-            # get snmp ifOutOctets.IfIndex==1
-            if_oct_out = get_snmp_data ( router_data, OIDS['ifOutOctets'] + i)
-            if if_oct_out:
-                print 'ifInOctets={}'.format(if_oct_out)
+            max_size = 10
+            seconds = 10
+            for j in range(max_size):
+                print 'j={}'.format(j)
+                
+                # for x-labels
+                times.append('{}s'.format(j*seconds))
+
+                # get snmp ifInOctets.IfIndex==1
+                if_oct_in = get_snmp_data ( router_data, OIDS['ifInOctets'] + idx)
+                if if_oct_in:
+                    print 'ifInOctets={}'.format(if_oct_in)
+
+                in_list = rrd_add (in_list, int(if_oct_in), max_size)
+
+                # get snmp ifOutOctets.IfIndex==1
+                if_oct_out = get_snmp_data ( router_data, OIDS['ifOutOctets'] + idx)
+                if if_oct_out:
+                    print 'ifOutOctets={}'.format(if_oct_out)
+
+                out_list = rrd_add (out_list, int(if_oct_out), max_size)
+
+                # sleep seconds
+                sleep(seconds)
+            #EMDOF:for i in (range(10):
+ 
+            get_iface_graph ( '{}_{}.svg'.format(router,if_descr.replace(r'/','_')), 
+                'Input/Output Bytes', 
+                in_list, 'Input Bytes', 
+                out_list, 'Output Butes', 
+                times)
+
     print
 
 

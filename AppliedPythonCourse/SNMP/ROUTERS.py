@@ -6,6 +6,7 @@ ROUTERS = {
         'SNMP Community' : 'galileo',
         'snmp_v' : 3,
         'snmp_user' : ('pysnmp', 'galileo1', 'galileo1'),
+        'ifIndex' : 5,
     },
     'pynet-rtr2' : {
         'IP' : '50.242.94.227',
@@ -13,19 +14,22 @@ ROUTERS = {
         'SNMP Community' : 'galileo',
         'snmp_v' : 3,
         'snmp_user' : ('pysnmp', 'galileo1', 'galileo1'),
+        'ifIndex' : 5,
     },
-    'pymat_rtr1' : {
+    'pymat-rtr1' : {
         'IP' : '10.1.1.1',
         'SNMP Port' : 161,
         'SNMP Community' : 'galileo',
         'snmp_v' : 2,
+        'ifIndex' : 1,
     },
-    'pymat_rtr2' : {
+    'pymat-rtr2' : {
         'IP' : '10.1.1.2',
         'SNMP Port' : 161,
         'SNMP Community' : 'galileo',
         'snmp_v' : 3,
         'snmp_user' : ('pysnmp', 'galileo1', 'galileo1'),
+        'ifIndex' : 1,
     },
 }
 
