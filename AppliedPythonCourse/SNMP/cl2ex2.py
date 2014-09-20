@@ -159,41 +159,47 @@ def main():
             if if_descr:
                 print 'ifDescr={}'.format(if_descr)
 
-            # Loop for 60 minutes
-            in_list = []
-            out_list = []
+            counter = {
+                    'ifInOctets': [],
+                    'ifOutOctets' : [],
+                    'ifInUcastPkts': [],
+                    'ifOutUcastPkts' : [],
+            }
             times = []
 
-            max_size = 10
-            seconds = 10
+            max_size = 12
+            seconds = 5*60
+
             for j in range(max_size):
+                # Loop for $seconds
+
                 print 'j={}'.format(j)
                 
                 # for x-labels
                 times.append('{}s'.format(j*seconds))
 
-                # get snmp ifInOctets.IfIndex==1
-                if_oct_in = get_snmp_data ( router_data, OIDS['ifInOctets'] + idx)
-                if if_oct_in:
-                    print 'ifInOctets={}'.format(if_oct_in)
+                for oid in counter.keys():
 
-                in_list = rrd_add (in_list, int(if_oct_in), max_size)
+                    # get snmp ifInOctets.IfIndex==1
+                    c = get_snmp_data ( router_data, OIDS[oid] + idx)
+                    if c:
+                        print '{}={}'.format(oid,c)
 
-                # get snmp ifOutOctets.IfIndex==1
-                if_oct_out = get_snmp_data ( router_data, OIDS['ifOutOctets'] + idx)
-                if if_oct_out:
-                    print 'ifOutOctets={}'.format(if_oct_out)
-
-                out_list = rrd_add (out_list, int(if_oct_out), max_size)
+                    counter[oid] = rrd_add (counter[oid], int(c), max_size)
 
                 # sleep seconds
                 sleep(seconds)
             #EMDOF:for i in (range(10):
  
-            get_counter_graph ( '{}_{}.svg'.format(router,if_descr.replace(r'/','_')), 
+            get_counter_graph ( '{}_{}_Octets.svg'.format(router,if_descr.replace(r'/','_')), 
                 'Input/Output Bytes', 
-                in_list, 'Input Bytes', 
-                out_list, 'Output Butes', 
+                counter['ifInOctets'], 'Input Bytes', 
+                counter['ifOutOctets'], 'Output Bytes', 
+                times)
+            get_counter_graph ( '{}_{}_Packets.svg'.format(router,if_descr.replace(r'/','_')), 
+                'Input/Output Unicast Packets', 
+                counter['ifInUcastPkts'], 'Input Packets', 
+                counter['ifOutUcastPkts'], 'Output Packets', 
                 times)
 
     print
