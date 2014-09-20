@@ -78,6 +78,40 @@ def rrd_add ( a_list, new, max_size=60):
     return (a_list)
 #ENDOF def rrd_add
 
+def get_counter_graph ( fn, title, in_list, in_title, out_list, out_title, times):
+    '''
+    Creates a graph using pygal in svg format
+    Input/Output line graph in time.
+    First it makes sure that if the data is of type counter, it recalculates the lists
+    so that it prints the speed of change of the counter
+    '''
+
+    new_in_list = []
+    new_out_list = []
+    new_times = []
+
+    for i in range(len(times)):
+        # assume each list is the same, if IndexError than dont print anything
+
+        if i > 0:
+            new_times.append    (    times [i] )
+            new_in_list.append  (  in_list [i] - prev_in )
+            new_out_list.append ( out_list [i] - prev_out )
+        
+            prev_in = in_list[i]
+            prev_out = out_list[i]
+        else:
+            # first time over , just initiate the variables
+            prev_in  = in_list [0]
+            prev_out = out_list [0]
+        #ENDOF if i > 0:
+
+    #ENDOF for i in range(len(times)):
+
+    return get_iface_graph ( fn, title, new_in_list, in_title, 
+                                        new_out_list, out_title, new_times)
+
+#ENDOF def get_counter_graph
 
 def get_iface_graph ( fn, title, in_list, in_title, out_list, out_title, times):
     '''
@@ -156,7 +190,7 @@ def main():
                 sleep(seconds)
             #EMDOF:for i in (range(10):
  
-            get_iface_graph ( '{}_{}.svg'.format(router,if_descr.replace(r'/','_')), 
+            get_counter_graph ( '{}_{}.svg'.format(router,if_descr.replace(r'/','_')), 
                 'Input/Output Bytes', 
                 in_list, 'Input Bytes', 
                 out_list, 'Output Butes', 
