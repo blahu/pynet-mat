@@ -1,0 +1,4 @@
+---
+kb_switches:
+  - {hostname: sw1, ip_addr: 10.0.0.1, default_gateway: 10.0.0.254, access_vlan: 100, snmp_community: PRIvaTE, secret: aa111}
+  - {hostname: sw2, ip_addr: 20.0.0.1, default_gateway: 20.0.0.254, access_vlan: 100, snmp_community: PRIvaTE, secret: aa222}

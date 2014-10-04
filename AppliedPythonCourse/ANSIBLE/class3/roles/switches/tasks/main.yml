@@ -1,0 +1,7 @@
+---
+- name: test connection
+  ping:
+
+- name: generate configuration
+  template:  src=access_switch.j2 dest=CFG/{{item.hostname}}
+  with_items: kb_switches
