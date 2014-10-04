@@ -5,7 +5,7 @@ hostname sw1
 !
 logging buffered 32000
 no logging console
-enable secret 0 aa111
+enable secret 0 a1
 !
 !
 !
@@ -33,5 +33,12 @@ line vty 0 4
 line vty 5 15
  login
 !
+!
+access-list 98 remark *** SNMP ***
+access-list 98 permit any
+!
+snmp-server view VIEWSTD iso included
+snmp-server group READONLY v3 priv read VIEWSTD access 98
+snmp-server user pysnmp READONLY v3 auth sha auth_key priv aes 128 encrypt_key
 !
 end

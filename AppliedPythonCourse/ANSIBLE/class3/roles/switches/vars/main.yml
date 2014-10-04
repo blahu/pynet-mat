@@ -1,4 +1,7 @@
 ---
 kb_switches:
-  - {hostname: sw1, ip_addr: 10.0.0.1, default_gateway: 10.0.0.254, access_vlan: 100, snmp_community: PRIvaTE, secret: aa111}
-  - {hostname: sw2, ip_addr: 20.0.0.1, default_gateway: 20.0.0.254, access_vlan: 100, snmp_community: PRIvaTE, secret: aa222}
+  - {hostname: sw1, ip_addr: 10.0.0.1, default_gateway: 10.0.0.254, access_vlan: 100, snmp_community: PRIvaTE, secret: a1, SNMPv3: True}
+  - {hostname: sw2, ip_addr: 20.0.0.1, default_gateway: 20.0.0.254, access_vlan: 100, snmp_community: PRIvaTE, secret: a2, SNMPv3: False}
+  - {hostname: sw3, ip_addr: 30.0.0.1, default_gateway: 30.0.0.254, access_vlan: 100, snmp_community: PRIvaTE, secret: a3, SNMPv3: False}
+  - {hostname: sw4, ip_addr: 40.0.0.1, default_gateway: 40.0.0.254, access_vlan: 100, snmp_community: PRIvaTE, secret: a4, SNMPv3: False}
+  - {hostname: sw5, ip_addr: 50.0.0.1, default_gateway: 50.0.0.254, access_vlan: 100, snmp_community: PRIvaTE, secret: a5, SNMPv3: False}

@@ -5,7 +5,7 @@ hostname sw2
 !
 logging buffered 32000
 no logging console
-enable secret 0 aa222
+enable secret 0 a2
 !
 !
 !
@@ -32,6 +32,7 @@ line vty 0 4
  login
 line vty 5 15
  login
+!
 !
 !
 end
