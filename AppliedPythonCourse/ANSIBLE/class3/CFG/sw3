@@ -1,11 +1,11 @@
 service timestamps debug datetime msec localtime show-timezone
 service timestamps log datetime msec localtime show-timezone
 !
-hostname sw1
+hostname sw3
 !
 logging buffered 32000
 no logging console
-enable secret 0 a1
+enable secret 0 a3
 !
 !
 !
@@ -131,10 +131,10 @@ interface FastEthernet0/24
  spanning-tree portfast
 !
 interface Vlan1
- ip address 10.0.0.1 255.255.255.0
+ ip address 30.0.0.1 255.255.255.0
  no ip route-cache
 !
-ip default-gateway 10.0.0.254
+ip default-gateway 30.0.0.254
 snmp-server community PRIvaTE RO
 !
 line con 0
@@ -144,11 +144,5 @@ line vty 5 15
  login
 !
 !
-access-list 98 remark *** SNMP ***
-access-list 98 permit any
-!
-snmp-server view VIEWSTD iso included
-snmp-server group READONLY v3 priv read VIEWSTD access 98
-snmp-server user pysnmp READONLY v3 auth sha auth_key priv aes 128 encrypt_key
 !
 end
