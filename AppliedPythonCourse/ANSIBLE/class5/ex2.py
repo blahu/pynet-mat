@@ -18,11 +18,86 @@ want to use Python's argparse to accomplish the argument processing.
 """
 __author__ = 'mateusz'
 
+from eapilib import create_connection
+from pprint import pprint
+
+class AristaSwitch:
+    """
+    Abstraction fro Arista EAPI calls:
+    """
+
+    def __init__(self, **params):
+        """ 
+        this function initializes the EAPI calls:
+        """
+        self.sw = create_connection( **params )
+
+    def check_vlan_exists ( self, vlan_id ):
+        """
+        this function should say yes/no if vlan id exists
+        """
+        # rub command on a switch 
+        resp = self.sw.run_commands ( ['show vlan'] )
+
+        # decapsulate from external list
+        resp =  resp [0]
+
+        for v in resp['vlans'].keys():
+            try:
+                if int(v) == int(vlan_id):
+                    # found vlan
+                    return True
+            except ValueError as e:
+                raise e
+        return False
+
+    def add_vlan ( self, vlan_id, vlan_name ):
+        """
+        this function should add a vlan
+        """
+        commands = [ "vlan {}".format (vlan_id) , "name {}".format (vlan_name) ]
+        resp = self.sw.config ( commands )
+        return True
+
+    def del_vlan ( self, vlan_id ):
+        """
+        this function should delete a vlan
+        """
+        commands = [ "no vlan {}".format (vlan_id) ]
+        resp = self.sw.config ( commands )
+        return True
+
 
 if __name__ == '__main__':
-    params =  { 'eapi_username': 'eapi',
-                'eapi_password': 'eapu',
-                'eapi_server'  : '1.1.1.3',
-                'eapi_port'    : '443'
-    }
+    params =  { 'username': 'eapi', 'password': 'eapu', 'hostname': '10.1.1.3' }
+    sw = AristaSwitch(**params)
+    
+    def add ( args ):
+        #add a vlan, if not exists
+        if not sw.check_vlan_exists (args.vlan):
+            sw.add_vlan(args.vlan, args.name)
+    
+    def rem ( args ):
+        #delete a vlan
+        sw.del_vlan(args.vlan)
+    #
+
+    # if executed from command line we would like to parse few args:
+    import argparse
+    parser = argparse.ArgumentParser(description="Add or remove vlans from Arista switch")
+    subparsers = parser.add_subparsers()
+
+    # add parser
+    parser_add = subparsers.add_parser('add')
+    parser_add.add_argument("name")
+    parser_add.add_argument("vlan", type=int)
+    parser_add.set_defaults (func=add)
+
+    # del parser
+    parser_add = subparsers.add_parser('rem')
+    parser_add.add_argument("vlan", type=int)
+    parser_add.set_defaults (func=rem)
+
+    args = parser.parse_args()
+    args.func(args)
 
