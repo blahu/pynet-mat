@@ -1,0 +1,11 @@
+Metadata-Version: 1.1
+Name: eapilib
+Version: 0.1.0
+Summary: eAPI Library for Arista EOS
+Home-page: https://github.com/arista-eosplus/eapilib
+Author: Arista EOS+
+Author-email: eosplus-dev@aristanetworks.com
+License: BSD-3
+Download-URL: https://github.com/arista-eosplus/eapilib/tarball/v0.1.0
+Description: UNKNOWN
+Platform: UNKNOWN
