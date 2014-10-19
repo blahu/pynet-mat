@@ -12,7 +12,7 @@
                  eapi_hostname={{ eapi_hostname }}
                  eapi_port={{ eapi_port }}
        with_items:
-         - { id: 67 , name: aqq }
-         - { id: 78 , name: bqq }
+         - { id: 67 , name: CURRENT-NAME }
+         - { id: 78 , name: TR-THIN-10.170.16.0/23 }
          - { id: 89 , name: dqq }
 

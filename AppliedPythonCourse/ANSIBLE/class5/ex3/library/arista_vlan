@@ -55,11 +55,15 @@ def main ():
     name = module.params ['name']
 
     sw = AristaSwitch ( **params)
-    if not sw.check_vlan_exists (vlan):
-        sw.add_vlan(vlan, name)
-        module.exit_json( changed=True )
-    else:
+    resp = sw.check_vlan_exists (vlan)
+
+    # vlan found, only add if name is to be changed.
+    if resp == name:
         module.exit_json( changed=False )
+    
+    # otherwise change it
+    sw.add_vlan(vlan, name)
+    module.exit_json( changed=True )
     
 # end of def main()
 
