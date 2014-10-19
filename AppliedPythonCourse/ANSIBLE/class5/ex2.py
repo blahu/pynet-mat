@@ -35,8 +35,11 @@ class AristaSwitch:
     def check_vlan_exists ( self, vlan_id ):
         """
         this function should say yes/no if vlan id exists
+        but
+        it returns name if exists
+        or False if not
         """
-        # rub command on a switch 
+        # run command on a switch 
         resp = self.sw.run_commands ( ['show vlan'] )
 
         # decapsulate from external list
@@ -46,10 +49,24 @@ class AristaSwitch:
             try:
                 if int(v) == int(vlan_id):
                     # found vlan
-                    return True
+                    return resp['vlans'][v]['name']
+
             except ValueError as e:
                 raise e
         return False
+
+    def show_vlans ( self ):
+        """
+        this function should just output/print all vlans on switch
+        """
+        # run command on a switch 
+        resp = self.sw.run_commands ( ['show vlan'] )
+
+        # decapsulate from external list
+        resp =  resp [0]
+
+        pprint(resp['vlans'])
+        return True
 
     def add_vlan ( self, vlan_id, vlan_name ):
         """
@@ -74,13 +91,17 @@ if __name__ == '__main__':
     
     def add ( args ):
         #add a vlan, if not exists
-        if not sw.check_vlan_exists (args.vlan):
+        name = sw.check_vlan_exists (args.vlan)
+        if name is False:
             sw.add_vlan(args.vlan, args.name)
     
     def rem ( args ):
         #delete a vlan
         sw.del_vlan(args.vlan)
     #
+    def show ( args):
+        #print all vlans
+        sw.show_vlans()
 
     # if executed from command line we would like to parse few args:
     import argparse
@@ -97,6 +118,10 @@ if __name__ == '__main__':
     parser_add = subparsers.add_parser('rem')
     parser_add.add_argument("vlan", type=int)
     parser_add.set_defaults (func=rem)
+
+    # print parser
+    parser_add = subparsers.add_parser('show')
+    parser_add.set_defaults (func=show)
 
     args = parser.parse_args()
     args.func(args)
