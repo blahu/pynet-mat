@@ -1,0 +1,67 @@
+#!/usr/bin/env python
+# Class 5
+# Exercise 3
+# Author mat
+"""
+3. Challenge exercise (optional) -- Using Arista's eAPI, write an Ansible
+module that adds a VLAN (both a VLAN id and a VLAN name).  Do this in an
+idempotent manner i.e. only add the VLAN, if it doesn't exist; only change the
+VLAN name, if it is not correct. 
+
+You should be able to pass four arguments from the Ansible task to your module
+(eapi_username, eapi_password, eapi_hostname, and eapi_port).
+"""
+__author__ = 'mateusz'
+
+###
+# I have it linked to :
+###
+# l3n -s /Users/mateusz/Dropbox/DEVOPS/kb/pynet-mat/AppliedPythonCourse/ANSIBLE/class5/ex2.py /usr/local/lib/python2.7/site-packages
+###
+
+from ex2 import AristaSwitch
+from pprint import pprint
+
+from ansible.module_utils.basic import *
+import datetime
+import json
+
+
+
+def main ():
+    """
+    Main program loop
+    """
+
+    module = AnsibleModule(
+        argument_spec = dict(
+            state         = dict(default='present', choices=['present', 'absent']),
+            name          = dict(required=True),
+            vlanid        = dict(required=True),
+            eapi_password = dict(required=True),
+            eapi_username = dict(required=True),
+            eapi_hostname = dict(required=True),
+            eapi_port     = dict(required=True),
+        )
+    )
+
+    params = {
+        'password' : module.params['eapi_password'],
+        'username' : module.params['eapi_username'],
+        'hostname' : module.params['eapi_hostname'],
+        'port'     : module.params['eapi_port'],
+    }
+    vlan = module.params ['vlanid']
+    name = module.params ['name']
+
+    sw = AristaSwitch ( **params)
+    if not sw.check_vlan_exists (vlan):
+        sw.add_vlan(vlan, name)
+        module.exit_json( changed=True )
+    else:
+        module.exit_json( changed=False )
+    
+# end of def main()
+
+main()
+
